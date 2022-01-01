@@ -1,75 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Sample Site</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-  <link rel="stylesheet" href="/main.css">
+   <head>
+      <meta charset="UTF-8">
+      <title>Sample Site</title>
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.0/css/font-awesome.css" integrity="sha512-72McA95q/YhjwmWFMGe8RI3aZIMCTJWPBbV8iQY3jy1z9+bi6+jHnERuNrDPo/WGYEzzNs4WdHNyyEr/yXJ9pA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+      <link rel="stylesheet" href="/main.css">
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/js/tempusdominus-bootstrap-4.min.js" integrity="sha512-k6/Bkb8Fxf/c1Tkyl39yJwcOZ1P4cRrJu77p83zJjN2Z55prbFHxPs9vN7q3l3+tSMGPDdoH51AEU8Vgo1cgAA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/css/tempusdominus-bootstrap-4.css" integrity="sha512-ClXpwbczwauhl7XC16/EFu3grIlYTpqTYOwqwAi7rNSqxmTqCpE8VS3ovG+qi61GoxSLnuomxzFXDNcPV1hvCQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+   </head>
+   <body>
+      <div class="container-flex" >
+        <div class="upload-form-div">
+         <form id="form" onsubmit="return false">
+            <div class="form-group" >
+               <label for="recordFile" class="custom-file-upload-button">Upload CSV file *
+               <input type="file" class="form-control-file" id="recordFile" accept=".csv,text/csv">
+               <p id="statusRecord" class="status"></p>
+              </label>
+              
+            </div>
+            <div class="form-group  relative">
+                        <div class="date" id="datetimepicker1" data-target-input="nearest">
+                           <label for="datetime-picker">Record start Time: * </label> 
+                           <div class="input-group"> 
+                              <input type="text" class="form-control datetimepicker-input" id="datetime-picker" data-target="#datetimepicker1"/>
+                              <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
+                                  <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                              </div>
+                          </div>
+                          <p id="statusTime" class="status"></p>
+               </div>
+            </div>
+            <button class="btn btn-sm btn-success addbtn" id="csv-upload-btn">SUBMIT RECORD</button>
+            <button class="btn btn-danger" id="reset-btn"> Reset </btn>
 
-</head>
-<body>
-
-  <div class="container">
-    <form>
-        <div class="form-group" id="form" onsubmit="return false">
-          <label for="exampleFormControlFile1">Upload CSV file</label>
-          <input type="file" class="form-control-file" id="recordFile" accept=".csv,text/csv">
+         </form>
         </div>
-        <button class="btn btn-sm btn-success addbtn" id="csv-upload-btn">Add Task</button>
-      </form>
+         
+         <div class="holter_summary">
+          <h4 class="title_section2"> HOLTER RECORD SUMMARY </h4>
+           <div class="menu  upload-form-div2">
+              <div class="yellow">
+                <h5> The number of <strong>P</strong> waves tagged "premature"</h5>
+                <span class="digits" id="pCount" >200</span>  
+              </div>
+              <div class="orange">
+              <h5> The number of <strong>QRS</strong> complexes tagged "premature"</h5>
+              <span class="digits" id="qrsCount">200</span>
+              </div>
+              <div class="violet">
+                <h5> <strong>Mean </strong> heart rate in the recording </h5>
+                <span class="digits" id="meanFrequency">200</span> bpm
+             </div>
+              <div class="gold">
+              <h5> <strong>Minimum </strong> Heart Rate heart rate in the recording </h5>
+              <span class="digits" id="minFrequency">200</span> bpm at <span class="record_time" id="minFrequencyTime"> 2017 Jan 21 12:43 PM </span>
+           </div>
+           <div class="gold2">
+            <h5> <strong>Maximum </strong> Heart Rate heart rate in the recording </h5>
+            <span class="digits" id="maxFrequency">200</span> bpm at <span class="record_time" id="maxFrequencyTime"> 2017 Jan 21 12:43 PM </span>
+         </div>
 
-      <div class="alert alert-danger" id="status" role="alert">
-        <strong >It was not valid format</strong>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+          </div>
+         </div>
       </div>
-  </div>
+      <script>
 
-  <script>
-      document.getElementById('csv-upload-btn').onclick = function(e){
-          e.preventDefault();
-          const _acceptedFileExtensions = ".csv";
-          const statusPara = document.getElementById("status");
-          statusPara.style.display = "none";
-          let files = document.getElementById("recordFile").files;
+        //bootstrap time picker part
+         let dateMS = 0;
+         $('#datetimepicker1').datetimepicker();
+         $("#datetimepicker1").on("change.datetimepicker",function({date, oldDate}){
+           dateMS = ((date._d).getTime());
+         });
 
-          if(files.length == 0){
-            statusPara.textContent = "No file selected, please select one";
-            console.log("No file selected, please select one"); 
+         document.getElementById("reset-btn").onclick = function(e){
+          document.getElementById("form").reset();
+          const statusRecord = document.getElementById("statusRecord");
+          const statusTime = document.getElementById("statusTime");
+          statusRecord.textContent = "";
+          statusTime.textContent = "";
+         }
+         
+         document.getElementById('csv-upload-btn').onclick = function(e){
+             e.preventDefault();
+             const _acceptedFileExtensions = ".csv";
+             const statusRecord = document.getElementById("statusRecord");
+             const statusTime = document.getElementById("statusTime");
+             const holter_summary = document.getElementsByClassName("holter_summary")[0];
+             holter_summary.style.display = "none";
+             let files = document.getElementById("recordFile").files;
+                  
+             if(files.length>0 && dateMS>0){
+               let formData = new FormData();
+               let file = files[0];       
+               if(file.name.match(/.(csv)$/i)){
+                  // document.getElementById('csv-upload-btn').style.display = "none";
+                   formData.append("record", file);
+                   formData.append("time", dateMS);
+                   let xhr = new XMLHttpRequest();
+                   xhr.onprogress = function (e) {
+                   
+                   };
+         
+                   xhr.onreadystatechange = function(){
+                       if(xhr.readyState == 4 && xhr.status == 200){
+                           const response = JSON.parse(xhr.responseText);
+                           holter_summary.style.display = "block";
+                           document.getElementById("pCount").textContent = response.P;
+                           document.getElementById("qrsCount").textContent = response.QRS;
+                           document.getElementById("meanFrequency").textContent = response.meanFrequency;
+                           document.getElementById("minFrequency").textContent = response.minFrequency.value;
+                           document.getElementById("minFrequencyTime").textContent = new Date(Number(response.minFrequency.time)).toLocaleString();
+                           document.getElementById("maxFrequency").textContent = response.maxFrequency.value;
+                           document.getElementById("maxFrequencyTime").textContent = new Date(Number(response.maxFrequency.time)).toLocaleString();
+                           document.getElementsByClassName("holter_summary")[0].scrollIntoView({behavior:"smooth"});
+                       }
+                   };
+                   xhr.open("POST", "/POST/delineation", true);
+                   xhr.send(formData);
+                   }
+               else{
+                   console.warn("format is not supported");
+                   statusRecord.style.display = "block";
+                   statusRecord.textContent = `file  is not a valid file type, please select again`;
+               }
+           }
+           else{
+            if(files.length == 0){
+               statusRecord.textContent = "Please select the record file that you want to process";
+               console.error("Please select the record file that you want to process"); 
             }
-
-        else{
-            let formData = new FormData();
-            let file = files[0];
-
-            if(file.name.match(/.(csv)$/i)){
-                document.getElementById('csv-upload-btn').style.display = "none";
-                formData.append("record", file);
-                let xhr = new XMLHttpRequest();
-                xhr.onprogress = function (e) {
-                
-                };
-
-                xhr.onreadystatechange = function(){
-                    if(xhr.readyState == 4 && xhr.status == 200){
-                        console.log(xhr.responseText);
-                    }
-                };
-                xhr.open("POST", "/POST/delineation", true);
-                xhr.send(formData);
-                }
-            else{
-                console.warn("format is not supported");
-                statusPara.style.display = "block";
-                statusPara.textContent = `file  is not a valid file type, please select again`;
+            if(dateMS === 0){
+              statusTime.textContent = "please select a time when you started recording";
+              console.error("please select a time when you started recording"); 
             }
-        }
-      };
-  </script>
-
-</body>
+           }
+         };
+      </script>
+   </body>
 </html>

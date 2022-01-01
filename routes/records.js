@@ -3,8 +3,6 @@
 const express = require("express");
 const multer = require("multer");
 const fs = require("fs");
-const csv = require("csv-stream");
-const through2 = require("through2");
 const readLine = require("readline");
 let router = express.Router();
 
@@ -24,25 +22,67 @@ const upload = multer({
 //error in the multer middleware is handled by express itself
 router.route("/")
     .post(upload.single("record"), (req, res) => {
-        let file = req.file;
-        let peCount = 0;
-        let qrsCount = 0;
-        fs.createReadStream(file.path).pipe(
-                csv.createStream({
-                    delimiter: ',',
-                    columns: ['wave', 'onstart', 'onend', 'tag1', "tag2", "tag3", "tag4"],
-                    escapeChar: '"',
-                    enclosedChar: '"'
-                })).pipe(through2({
-                objectMode: true
-            })).on('data', data => {
-                console.log(data);
-            }).on('end', () => {
-                console.log('end')
-            })
-            .on('error', err => {
-                console.error(err)
-            }); 
+       const filePath = req.file.path;
+       const results = {
+         P:0, 
+         QRS:0,
+         meanFrequency: 0,
+         minFrequency:{
+         value: 9999999,
+         time: 0
+       },
+       maxFrequency:{
+         value: 0,
+         time: 0
+       }
+         };
+
+       const frequencyCollector = {sumOfFrequency: 0, cycleCount:0};
+
+        let time  = 0;
+        let lastTimeStamp = 0;
+
+        readLine.createInterface({
+          input: fs.createReadStream(filePath)
+        }).on("line", line=>{
+          const cols = line.split(",");
+          const waveType = cols[0];
+          const startTime = cols[1];
+          const endTime = cols[2];
+          const tags = cols.slice(3);
+          if((waveType === "P" || waveType === "QRS") && tags.includes("premature")){
+            results[waveType]++;
+          }
+          
+          time += (cols[2] - cols[1]);
+          time += (cols[1] - lastTimeStamp);
+          lastTimeStamp = cols[2];
+
+          if(waveType === "QRS"){
+            let frequency = Math.floor((60/time)*1000);
+            //check if frequency is maxValue or minValue
+            if(frequency > results.maxFrequency.value){
+              results.maxFrequency.value = frequency;
+              results.maxFrequency.time = Number(cols[2]); 
+            }
+
+            if(frequency<results.minFrequency.value){
+              results.minFrequency.value = frequency;
+              results.minFrequency.time = Number(cols[2]); 
+            }
+
+            frequencyCollector.sumOfFrequency += frequency;
+            frequencyCollector.cycleCount ++;
+            time = 0;
+          }
+
+        }).on("close", ()=>{
+          let heartRate = Math.floor(frequencyCollector.sumOfFrequency/frequencyCollector.cycleCount);
+          results.meanFrequency = heartRate;
+          results.maxFrequency.time += Number(req.body.time);
+          results.minFrequency.time += Number(req.body.time);
+          res.status(200).json(results);
+        });
     });
 
 module.exports = router;
