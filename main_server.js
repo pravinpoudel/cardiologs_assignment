@@ -23,12 +23,12 @@ app.get("/", (req, res)=>{
 });
 
 app.use((req, res, next)=>{
-    res.status(404).send("Page not found");
+   return res.status(404).send("Page not found");
 });
 
 //for error handling; error handling middleware
 app.use((err, req, res, next)=>{
-    res.status(500).send(`Sorry there is error with message saying: ${err.message}`);
+   return res.status(500).send(`Sorry there is error with message saying: ${err.message}`);
 })
 
 app.listen(3000, (err)=>{
