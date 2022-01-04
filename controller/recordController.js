@@ -48,10 +48,13 @@ exports.post_record = (req, res) => {
 
         let time = 0;
         let lastTimeStamp = 0;
+        let notSupportedFlag= false;
 
-        readLine.createInterface({
+        const rl = readLine.createInterface({
             input: fs.createReadStream(req.file.path)
-        }).on("line", line => {
+        });
+
+        rl.on("line", line => {
             const cols = line.split(",");
             const waveType = cols[0];
             const startTime = cols[1];
@@ -60,11 +63,13 @@ exports.post_record = (req, res) => {
 
             //just to make sure csv has valid data list
             if (!(waveType in expectedWave && Number(startTime) >= 0 && Number(endTime) > 0)) {
-                res.status(500).send("File data entry is not in supported format");
-                return;
-            }
+                notSupportedFlag = true;
 
-            else{
+                rl.close();
+                rl.removeAllListeners();
+            } 
+            
+            else {
                 if ((waveType === "P" || waveType === "QRS") && tags.includes("premature")) {
                     results[waveType]++;
                 }
@@ -94,15 +99,25 @@ exports.post_record = (req, res) => {
             }
 
 
-        }).on("error", (err) => {
-            return res.status(500).send(`error is: ${err.message}`);
-        }).on("close", () => {
-            let heartRate = Math.floor(frequencyCollector.sumOfFrequency / frequencyCollector.cycleCount);
-            results.meanFrequency = heartRate;
-            results.maxFrequency.time += Number(req.body.time);
-            results.minFrequency.time += Number(req.body.time);
-            res.status(200).json(results);
-            return;
+        });
+
+        rl.on("error", (err) => {
+            return res.status(500).send(`error is: ${err}`);
+        });
+
+        rl.on("close", () => {
+
+            if (notSupportedFlag) {
+                notSupportedFlag = false
+                return res.status(500).send("File data is not supported format");
+            } else {
+                let heartRate = Math.floor(frequencyCollector.sumOfFrequency / frequencyCollector.cycleCount);
+                results.meanFrequency = heartRate;
+                results.maxFrequency.time += Number(req.body.time);
+                results.minFrequency.time += Number(req.body.time);
+                res.status(200).json(results);
+                return;
+            }
         });
 
     } catch (err) {
