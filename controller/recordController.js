@@ -64,7 +64,6 @@ exports.post_record = (req, res) => {
             //just to make sure csv has valid data list
             if (!(waveType in expectedWave && Number(startTime) >= 0 && Number(endTime) > 0)) {
                 notSupportedFlag = true;
-
                 rl.close();
                 rl.removeAllListeners();
             } 

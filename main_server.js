@@ -2,7 +2,7 @@
 
 const express = require("express");
 const app = express();
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 3000;
 const path = require("path");
 const bodyParser = require("body-parser");
 const recordRoute = require("./routes/records");
@@ -31,7 +31,7 @@ app.use((err, req, res, next)=>{
    return res.status(500).send(`Sorry there is error with message saying: ${err.message}`);
 })
 
-app.listen(3000, (err)=>{
+app.listen(port, (err)=>{
     if(err){
         console.log(`there is error - ${err}`);
     }

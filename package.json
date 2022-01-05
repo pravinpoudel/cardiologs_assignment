@@ -11,12 +11,8 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.1",
-    "csv-parser": "^3.0.0",
-    "csv-stream": "^0.2.0",
-    "csvtojson": "^2.0.10",
     "express": "^4.17.2",
     "multer": "^1.4.4",
-    "nodemon": "^2.0.15",
-    "through2": "^4.0.2"
+    "nodemon": "^2.0.15"
   }
 }
