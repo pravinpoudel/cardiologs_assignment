@@ -7,6 +7,10 @@ npm install
 nodemon
 ```
 
+project will start on port 3000 unless you assign another value in environment variable through .env file or scripts in package.json
+
+``` localhost:300```
+
 Project summary: 
 
 1. Form field that accept the CSV file and (Data and time) when the data in CSV was started recording
