@@ -1,7 +1,6 @@
 const fs = require("fs");
 const readLine = require("readline");
 
-
 exports.post_record = (req, res) => {
 
     //it's not actually needed but i am doing this just for sake of checking
@@ -11,7 +10,7 @@ exports.post_record = (req, res) => {
         });
     }
 
-    //checking if file is empty
+    //checking if file is of zero bytes
     if (req.file.size == 0) {
         return res.status(400).send("file is empty");
     }
@@ -50,6 +49,7 @@ exports.post_record = (req, res) => {
         let lastTimeStamp = 0;
         let notSupportedFlag= false;
 
+        // create a createReadStream
         const rl = readLine.createInterface({
             input: fs.createReadStream(req.file.path)
         });
@@ -69,6 +69,8 @@ exports.post_record = (req, res) => {
             } 
             
             else {
+
+                //checking if the wave is P or QRS and if yes check if it has premature tag in it
                 if ((waveType === "P" || waveType === "QRS") && tags.includes("premature")) {
                     results[waveType]++;
                 }
@@ -105,7 +107,6 @@ exports.post_record = (req, res) => {
         });
 
         rl.on("close", () => {
-
             if (notSupportedFlag) {
                 notSupportedFlag = false
                 return res.status(500).send("File data is not supported format");

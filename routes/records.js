@@ -6,7 +6,16 @@ const path = require("path");
 let router = express.Router();
 
 const RecordController = require("../controller/recordController")
-//we dont have limit on fileSize
+//we dont have limit on fileSize in our code here
+
+//if we want to store our file data into some sort of database, we would probably store it into buffer 
+// with multer.memoryStorage()
+
+// but problem with memory storage is with lot of request and storing all data from those request into buffer or memory might be problem
+//so yes, it could be done with memoryStorage too
+
+// Heere I am doing with diskStorage because 
+
 const fileStorageEngine = multer.diskStorage({
     destination: (req, files, cb1) => {
         cb1(null, "./public/records");
@@ -16,6 +25,7 @@ const fileStorageEngine = multer.diskStorage({
         cb2(null, Date.now() + "--" + file.originalname);
     }
 });
+
 
 let upload = multer({
     storage: fileStorageEngine,
